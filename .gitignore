@@ -1,0 +1,48 @@
+# Secrets and credentials
+credentials/
+certs/
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*service-account*.json
+google-sheets-key.json
+.env
+
+# Dataset and generated data
+data/
+nasa_ims/
+*.npy
+*.pkl
+*.joblib
+*.db
+*.sqlite
+*.csv
+
+# Logs
+*.log
+logs/
+replayer.log
+telemetry.log
+anomaly_detector.log
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+uns-env/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node-RED local runtime
+.node-red/
+flows_cred.json
+
+# Docker/local runtime
+docker-compose.override.yml
