@@ -61,6 +61,10 @@ Email alert triggered automatically via AWS IoT Rule → SNS when anomaly exceed
 
 ![SNS anomaly email](images/sns-mail.png)
 
+Google Sheets work order row created automatically by `erp_handler.py` on the same anomaly event:
+
+![Google Sheets ERP](images/googlesheets-erp.png)
+
 Ignition SCADA dashboard subscribing to Sparkplug B tags from the broker:
 
 ![Ignition SCADA](images/scadadash.png)
