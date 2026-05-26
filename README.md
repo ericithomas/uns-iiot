@@ -47,6 +47,29 @@ flowchart LR
     ERP --> SHEET
 ```
 
+## Demo
+
+Motor1 anomaly score climbing as the NASA bearing degrades through Test 2:
+
+![Anomaly score over replay](images/grafana-motor1anomalyrate.png)
+
+Full Grafana dashboard with vibration, Pi telemetry, memory, and replay progress:
+
+![Grafana dashboard](images/grafana-dash.png)
+
+Email alert triggered automatically via AWS IoT Rule → SNS when anomaly exceeds 0.85:
+
+![SNS anomaly email](images/sns-mail.png)
+
+Ignition SCADA dashboard subscribing to Sparkplug B tags from the broker:
+
+![Ignition SCADA](images/scadadash.png)
+
+Node-RED flows handling Sparkplug B encoding for Ignition and a parallel JSON bridge for the historian:
+
+![Node-RED flows](images/noderedflows.png)
+
+
 ## Tech Stack
 
 **Edge (Raspberry Pi 4):** Python (numpy, scikit-learn, paho-mqtt, joblib), Node-RED with `node-red-contrib-sparkplug-plus`, systemd
