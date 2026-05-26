@@ -126,11 +126,14 @@ uns-iiot/
 │   ├── aws_bridge.py             # HiveMQ to AWS IoT, with cooldown
 │   ├── erp_handler.py            # Anomaly events to Google Sheets
 │   └── iot-policy.json           # AWS IoT policy template
+├── notebooks/
+│   └── IIoT_Isolation_Forest.ipynb   # Isolation Forest training in Colab
 ├── docs/
 │   ├── aws_iot_endpoint.txt
 │   ├── aws_iot_rule_uns_anomaly_alert.json
 │   └── aws_region.txt
 └── .gitignore
+
 ```
 
 ## Key Technical Decisions
