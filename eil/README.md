@@ -65,8 +65,6 @@ Two things it does that a plain cos-phi relay doesn't:
 
 The sim runs the loop end to end (steps switch, PF corrects), and the before/after PF shows up in Grafana.
 
-![PFC flow in Node-RED](images/noderedafterapfc.png)
-
 ## Possible extensions
 
 Scoped but left out of this build:
