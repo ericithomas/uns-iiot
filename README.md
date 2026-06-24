@@ -1,3 +1,8 @@
+> **Repo layers.** This repo is a Unified Namespace IIoT platform with two layers:
+> - **Smart Packaging Line** (this README): machine condition monitoring with edge ML.
+> - **Energy Intelligence Layer**: power and energy-quality monitoring. See [`eil/`](eil/).
+
+
 # Smart Packaging Line: UNS IIoT Pipeline
 
 End-to-end Industrial IoT pipeline implementing ISA-95 L0 to L4 as a Unified Namespace, with edge ML anomaly detection on a Raspberry Pi 4. The NASA IMS Bearing Dataset is replayed through the full pipeline (edge to ERP) as a digital stand-in for a real packaging line motor.
