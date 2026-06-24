@@ -1,0 +1,498 @@
+[
+    {
+        "id": "012182c20eae238b",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f681c73ec8b69e23",
+        "type": "modbus-read",
+        "z": "012182c20eae238b",
+        "name": "read Incomer",
+        "topic": "",
+        "showStatusActivities": false,
+        "logIOActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "unitid": "1",
+        "dataType": "HoldingRegister",
+        "adr": "0",
+        "quantity": "58",
+        "rate": "1",
+        "rateUnit": "s",
+        "delayOnStart": false,
+        "enableDeformedMessages": false,
+        "startDelayTime": "",
+        "server": "e6fb568c056a7a14",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "x": 170,
+        "y": 180,
+        "wires": [
+            [
+                "827eb7cd178b5b3e"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "fbef71126e7b4367",
+        "type": "modbus-read",
+        "z": "012182c20eae238b",
+        "name": "read PackLine1",
+        "topic": "",
+        "showStatusActivities": false,
+        "logIOActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "unitid": "2",
+        "dataType": "HoldingRegister",
+        "adr": "0",
+        "quantity": "44",
+        "rate": "1",
+        "rateUnit": "s",
+        "delayOnStart": false,
+        "enableDeformedMessages": false,
+        "startDelayTime": "",
+        "server": "e6fb568c056a7a14",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "x": 180,
+        "y": 360,
+        "wires": [
+            [
+                "adebb85c13d76600"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "88d8aafb9fa0ec2a",
+        "type": "modbus-read",
+        "z": "012182c20eae238b",
+        "name": "read Utilities",
+        "topic": "",
+        "showStatusActivities": false,
+        "logIOActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "unitid": "3",
+        "dataType": "HoldingRegister",
+        "adr": "0",
+        "quantity": "44",
+        "rate": "1",
+        "rateUnit": "s",
+        "delayOnStart": false,
+        "enableDeformedMessages": false,
+        "startDelayTime": "",
+        "server": "e6fb568c056a7a14",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "x": 170,
+        "y": 520,
+        "wires": [
+            [
+                "30fda398f5d56e74"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "827eb7cd178b5b3e",
+        "type": "function",
+        "z": "012182c20eae238b",
+        "name": "decoder 1",
+        "func": "const r = msg.payload;\n\nconst f32 = i => {\n    if (!r || r[i] === undefined || r[i + 1] === undefined) {\n        return null;\n    }\n    const b = Buffer.alloc(4);\n    b.writeUInt16BE(r[i], 0);\n    b.writeUInt16BE(r[i + 1], 2);\n    return b.readFloatBE(0);\n};\n\nmsg.payload = {\n    v_l1: f32(0),\n    v_l2: f32(2),\n    v_l3: f32(4),\n\n    i_l1: f32(6),\n    i_l2: f32(8),\n    i_l3: f32(10),\n\n    // Keep old names\n    p: f32(12),\n    q: f32(14),\n    s: f32(16),\n    pf: f32(18),\n\n    freq: f32(20),\n    thd_v: f32(22),\n    thd_i: f32(24),\n\n    p_l1: f32(26),\n    p_l2: f32(28),\n    p_l3: f32(30),\n\n    pf_l1: f32(32),\n    pf_l2: f32(34),\n    pf_l3: f32(36),\n\n    kwh: f32(38),\n    kvarh: f32(40),\n    demand: f32(42),\n\n    // Add cleaner aliases for the JSON/historian path\n    p_kw: f32(12),\n    q_kvar: f32(14),\n    s_kva: f32(16),\n    freq_hz: f32(20),\n    thd_v_pct: f32(22),\n    thd_i_pct: f32(24),\n    p_l1_kw: f32(26),\n    p_l2_kw: f32(28),\n    p_l3_kw: f32(30),\n    demand_kw: f32(42),\n\n    // APFC closed-loop diagnostic registers\n    apfc_pf_before: f32(44),\n    apfc_pf_after: f32(46),\n    apfc_q_cap_kvar: f32(48),\n    apfc_steps_active: f32(50),\n    apfc_target_pf: f32(52),\n    apfc_q_before_kvar: f32(54),\n    apfc_q_after_kvar: f32(56)\n};\n\nmsg.topic = \"Incomer\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 180,
+        "wires": [
+            [
+                "cc2e40c8451efbc9",
+                "8667989c6838fd96"
+            ]
+        ]
+    },
+    {
+        "id": "adebb85c13d76600",
+        "type": "function",
+        "z": "012182c20eae238b",
+        "name": "decoder 2",
+        "func": "const r = msg.payload; // array of 44 register ints from output 1\nconst f32 = i => { const b = Buffer.alloc(4); b.writeUInt16BE(r[i],0); b.writeUInt16BE(r[i+1],2); return b.readFloatBE(0); };\nmsg.payload = {\n  v_l1:f32(0), v_l2:f32(2), v_l3:f32(4),\n  i_l1:f32(6), i_l2:f32(8), i_l3:f32(10),\n  p:f32(12), q:f32(14), s:f32(16), pf:f32(18),\n  freq:f32(20), thd_v:f32(22), thd_i:f32(24),\n  p_l1:f32(26), p_l2:f32(28), p_l3:f32(30),\n  pf_l1:f32(32), pf_l2:f32(34), pf_l3:f32(36),\n  kwh:f32(38), kvarh:f32(40), demand:f32(42)\n};\nmsg.topic = \"PackLine1\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 360,
+        "wires": [
+            [
+                "09600f3afd1c789b",
+                "3a260385412ea1a5"
+            ]
+        ]
+    },
+    {
+        "id": "30fda398f5d56e74",
+        "type": "function",
+        "z": "012182c20eae238b",
+        "name": "decoder 3",
+        "func": "const r = msg.payload; // array of 44 register ints from output 1\nconst f32 = i => { const b = Buffer.alloc(4); b.writeUInt16BE(r[i],0); b.writeUInt16BE(r[i+1],2); return b.readFloatBE(0); };\nmsg.payload = {\n  v_l1:f32(0), v_l2:f32(2), v_l3:f32(4),\n  i_l1:f32(6), i_l2:f32(8), i_l3:f32(10),\n  p:f32(12), q:f32(14), s:f32(16), pf:f32(18),\n  freq:f32(20), thd_v:f32(22), thd_i:f32(24),\n  p_l1:f32(26), p_l2:f32(28), p_l3:f32(30),\n  pf_l1:f32(32), pf_l2:f32(34), pf_l3:f32(36),\n  kwh:f32(38), kvarh:f32(40), demand:f32(42)\n};\nmsg.topic = \"Utilities\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 520,
+        "wires": [
+            [
+                "421953a13187e71f",
+                "f551fb300dcb9349"
+            ]
+        ]
+    },
+    {
+        "id": "cc2e40c8451efbc9",
+        "type": "function",
+        "z": "012182c20eae238b",
+        "name": "Sparkplug Incomer",
+        "func": "const d = msg.payload;\n// [metric name, value, engineering unit]\nconst rows = [\n  [\"Total/P_kW\", d.p, \"kW\"], [\"Total/Q_kVAR\", d.q, \"kVAR\"], [\"Total/S_kVA\", d.s, \"kVA\"],\n  [\"Total/PF\", d.pf, \"\"], [\"Total/THD_I\", d.thd_i, \"%\"], [\"Total/THD_V\", d.thd_v, \"%\"],\n  [\"Total/Freq_Hz\", d.freq, \"Hz\"], [\"Total/kWh\", d.kwh, \"kWh\"],\n  [\"Total/kVARh\", d.kvarh, \"kVARh\"], [\"Total/Demand_kW\", d.demand, \"kW\"],\n  [\"L1/V\", d.v_l1, \"V\"], [\"L2/V\", d.v_l2, \"V\"], [\"L3/V\", d.v_l3, \"V\"],\n  [\"L1/I\", d.i_l1, \"A\"], [\"L2/I\", d.i_l2, \"A\"], [\"L3/I\", d.i_l3, \"A\"],\n  [\"L1/P_kW\", d.p_l1, \"kW\"], [\"L2/P_kW\", d.p_l2, \"kW\"], [\"L3/P_kW\", d.p_l3, \"kW\"],\n  [\"L1/PF\", d.pf_l1, \"\"], [\"L2/PF\", d.pf_l2, \"\"], [\"L3/PF\", d.pf_l3, \"\"],\n];\nmsg.payload = { metrics: rows.map(r => ({ name: r[0], value: r[1] })) };\nif (!context.get(\"defined\")) {           // send definitions ONCE only\n  const def = {};\n  for (const r of rows) def[r[0]] = { dataType: \"Double\", properties: { engUnits: { type: \"String\", value: r[2] } } };\n  msg.definition = def;\n  context.set(\"defined\", true);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 180,
+        "wires": [
+            [
+                "4d984c4224e3166f"
+            ]
+        ]
+    },
+    {
+        "id": "09600f3afd1c789b",
+        "type": "function",
+        "z": "012182c20eae238b",
+        "name": "Sparkplug Incomer",
+        "func": "const d = msg.payload;\n// [metric name, value, engineering unit]\nconst rows = [\n  [\"Total/P_kW\", d.p, \"kW\"], [\"Total/Q_kVAR\", d.q, \"kVAR\"], [\"Total/S_kVA\", d.s, \"kVA\"],\n  [\"Total/PF\", d.pf, \"\"], [\"Total/THD_I\", d.thd_i, \"%\"], [\"Total/THD_V\", d.thd_v, \"%\"],\n  [\"Total/Freq_Hz\", d.freq, \"Hz\"], [\"Total/kWh\", d.kwh, \"kWh\"],\n  [\"Total/kVARh\", d.kvarh, \"kVARh\"], [\"Total/Demand_kW\", d.demand, \"kW\"],\n  [\"L1/V\", d.v_l1, \"V\"], [\"L2/V\", d.v_l2, \"V\"], [\"L3/V\", d.v_l3, \"V\"],\n  [\"L1/I\", d.i_l1, \"A\"], [\"L2/I\", d.i_l2, \"A\"], [\"L3/I\", d.i_l3, \"A\"],\n  [\"L1/P_kW\", d.p_l1, \"kW\"], [\"L2/P_kW\", d.p_l2, \"kW\"], [\"L3/P_kW\", d.p_l3, \"kW\"],\n  [\"L1/PF\", d.pf_l1, \"\"], [\"L2/PF\", d.pf_l2, \"\"], [\"L3/PF\", d.pf_l3, \"\"],\n];\nmsg.payload = { metrics: rows.map(r => ({ name: r[0], value: r[1] })) };\nif (!context.get(\"defined\")) {           // send definitions ONCE only\n  const def = {};\n  for (const r of rows) def[r[0]] = { dataType: \"Double\", properties: { engUnits: { type: \"String\", value: r[2] } } };\n  msg.definition = def;\n  context.set(\"defined\", true);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 360,
+        "wires": [
+            [
+                "1eed4e32750f1301"
+            ]
+        ]
+    },
+    {
+        "id": "421953a13187e71f",
+        "type": "function",
+        "z": "012182c20eae238b",
+        "name": "Sparkplug Incomer",
+        "func": "const d = msg.payload;\n// [metric name, value, engineering unit]\nconst rows = [\n  [\"Total/P_kW\", d.p, \"kW\"], [\"Total/Q_kVAR\", d.q, \"kVAR\"], [\"Total/S_kVA\", d.s, \"kVA\"],\n  [\"Total/PF\", d.pf, \"\"], [\"Total/THD_I\", d.thd_i, \"%\"], [\"Total/THD_V\", d.thd_v, \"%\"],\n  [\"Total/Freq_Hz\", d.freq, \"Hz\"], [\"Total/kWh\", d.kwh, \"kWh\"],\n  [\"Total/kVARh\", d.kvarh, \"kVARh\"], [\"Total/Demand_kW\", d.demand, \"kW\"],\n  [\"L1/V\", d.v_l1, \"V\"], [\"L2/V\", d.v_l2, \"V\"], [\"L3/V\", d.v_l3, \"V\"],\n  [\"L1/I\", d.i_l1, \"A\"], [\"L2/I\", d.i_l2, \"A\"], [\"L3/I\", d.i_l3, \"A\"],\n  [\"L1/P_kW\", d.p_l1, \"kW\"], [\"L2/P_kW\", d.p_l2, \"kW\"], [\"L3/P_kW\", d.p_l3, \"kW\"],\n  [\"L1/PF\", d.pf_l1, \"\"], [\"L2/PF\", d.pf_l2, \"\"], [\"L3/PF\", d.pf_l3, \"\"],\n];\nmsg.payload = { metrics: rows.map(r => ({ name: r[0], value: r[1] })) };\nif (!context.get(\"defined\")) {           // send definitions ONCE only\n  const def = {};\n  for (const r of rows) def[r[0]] = { dataType: \"Double\", properties: { engUnits: { type: \"String\", value: r[2] } } };\n  msg.definition = def;\n  context.set(\"defined\", true);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 520,
+        "wires": [
+            [
+                "8b2a5d8c8a69fbe3"
+            ]
+        ]
+    },
+    {
+        "id": "4d984c4224e3166f",
+        "type": "mqtt sparkplug device",
+        "z": "012182c20eae238b",
+        "name": "Incomer",
+        "metrics": {},
+        "broker": "680686000d28b77c",
+        "birthImmediately": false,
+        "bufferDevice": false,
+        "x": 780,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1eed4e32750f1301",
+        "type": "mqtt sparkplug device",
+        "z": "012182c20eae238b",
+        "name": "PackLine1",
+        "metrics": {},
+        "broker": "680686000d28b77c",
+        "birthImmediately": false,
+        "bufferDevice": false,
+        "x": 790,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8b2a5d8c8a69fbe3",
+        "type": "mqtt sparkplug device",
+        "z": "012182c20eae238b",
+        "name": "Utilities",
+        "metrics": {},
+        "broker": "680686000d28b77c",
+        "birthImmediately": false,
+        "bufferDevice": false,
+        "x": 780,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "35f3f38e5519ef15",
+        "type": "mqtt out",
+        "z": "012182c20eae238b",
+        "name": "",
+        "topic": "uns/json/energy/Incomer",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "af4f59b3596b98ce",
+        "x": 830,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "30acd56e80dde1d8",
+        "type": "mqtt out",
+        "z": "012182c20eae238b",
+        "name": "",
+        "topic": "uns/json/energy/PackLine1",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "af4f59b3596b98ce",
+        "x": 840,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "c43b314c7893a346",
+        "type": "mqtt out",
+        "z": "012182c20eae238b",
+        "name": "",
+        "topic": "uns/json/energy/Utilities",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "af4f59b3596b98ce",
+        "x": 830,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "8667989c6838fd96",
+        "type": "function",
+        "z": "012182c20eae238b",
+        "name": "JSON Incomer",
+        "func": "let p = msg.payload;\n\nfunction pick(...keys) {\n    for (let k of keys) {\n        if (p[k] !== undefined && p[k] !== null) return Number(p[k]);\n    }\n    return null;\n}\n\nlet v_l1 = pick(\"v_l1\");\nlet v_l2 = pick(\"v_l2\");\nlet v_l3 = pick(\"v_l3\");\n\nlet i_l1 = pick(\"i_l1\");\nlet i_l2 = pick(\"i_l2\");\nlet i_l3 = pick(\"i_l3\");\n\nlet pf = pick(\"pf\", \"pf_tot\", \"power_factor\", \"power_factor_total\");\n\nlet s_kva = pick(\"s_kva\", \"s_tot\", \"apparent_power\", \"apparent_power_total\");\nlet p_kw = pick(\"p_kw\", \"p_tot\", \"active_power\", \"active_power_total\");\nlet q_kvar = pick(\"q_kvar\", \"q_tot\", \"reactive_power\", \"reactive_power_total\");\n\nif (s_kva === null && v_l1 !== null && v_l2 !== null && v_l3 !== null && i_l1 !== null && i_l2 !== null && i_l3 !== null) {\n    s_kva = ((v_l1 * i_l1) + (v_l2 * i_l2) + (v_l3 * i_l3)) / 1000.0;\n}\n\nif (p_kw === null && s_kva !== null && pf !== null) {\n    p_kw = s_kva * pf;\n}\n\nif (q_kvar === null && s_kva !== null && p_kw !== null) {\n    q_kvar = Math.sqrt(Math.max((s_kva * s_kva) - (p_kw * p_kw), 0));\n}\n\n// APFC fields from the extended Incomer register block\nlet apfc_pf_before = pick(\"apfc_pf_before\", \"pf_before\");\nlet apfc_pf_after = pick(\"apfc_pf_after\", \"pf_after\");\nlet apfc_q_cap_kvar = pick(\"apfc_q_cap_kvar\", \"q_cap_kvar\", \"capacitor_kvar\");\nlet apfc_steps_active = pick(\"apfc_steps_active\", \"steps_active\");\nlet apfc_target_pf = pick(\"apfc_target_pf\", \"target_pf\");\nlet apfc_q_before_kvar = pick(\"apfc_q_before_kvar\", \"q_before_kvar\");\nlet apfc_q_after_kvar = pick(\"apfc_q_after_kvar\", \"q_after_kvar\");\n\n// In the APFC emulator, normal pf is already the corrected/incomer-side PF.\n// This fallback keeps the JSON usable even if apfc_pf_after is not present.\nif (apfc_pf_after === null && pf !== null) {\n    apfc_pf_after = pf;\n}\n\nmsg.topic = \"uns/json/energy/Incomer\";\n\nmsg.payload = JSON.stringify({\n    v_l1: v_l1,\n    v_l2: v_l2,\n    v_l3: v_l3,\n\n    i_l1: i_l1,\n    i_l2: i_l2,\n    i_l3: i_l3,\n\n    p_kw: p_kw,\n    q_kvar: q_kvar,\n    s_kva: s_kva,\n    pf: pf,\n\n    freq_hz: pick(\"freq_hz\", \"freq\", \"frequency\"),\n\n    thd_v_pct: pick(\"thd_v_pct\", \"thd_v\"),\n    thd_i_pct: pick(\"thd_i_pct\", \"thd_i\"),\n\n    p_l1_kw: pick(\"p_l1_kw\", \"p_l1\"),\n    p_l2_kw: pick(\"p_l2_kw\", \"p_l2\"),\n    p_l3_kw: pick(\"p_l3_kw\", \"p_l3\"),\n\n    pf_l1: pick(\"pf_l1\"),\n    pf_l2: pick(\"pf_l2\"),\n    pf_l3: pick(\"pf_l3\"),\n\n    kwh: pick(\"kwh\"),\n    kvarh: pick(\"kvarh\"),\n    demand_kw: pick(\"demand_kw\", \"demand\"),\n\n    apfc_pf_before: apfc_pf_before,\n    apfc_pf_after: apfc_pf_after,\n    apfc_q_cap_kvar: apfc_q_cap_kvar,\n    apfc_steps_active: apfc_steps_active,\n    apfc_target_pf: apfc_target_pf,\n    apfc_q_before_kvar: apfc_q_before_kvar,\n    apfc_q_after_kvar: apfc_q_after_kvar\n});\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 260,
+        "wires": [
+            [
+                "35f3f38e5519ef15"
+            ]
+        ]
+    },
+    {
+        "id": "3a260385412ea1a5",
+        "type": "function",
+        "z": "012182c20eae238b",
+        "name": "JSON PackLine1",
+        "func": "let p = msg.payload;\n\nfunction pick(...keys) {\n    for (let k of keys) {\n        if (p[k] !== undefined && p[k] !== null) return Number(p[k]);\n    }\n    return null;\n}\n\nlet v_l1 = pick(\"v_l1\");\nlet v_l2 = pick(\"v_l2\");\nlet v_l3 = pick(\"v_l3\");\n\nlet i_l1 = pick(\"i_l1\");\nlet i_l2 = pick(\"i_l2\");\nlet i_l3 = pick(\"i_l3\");\n\nlet pf = pick(\"pf\", \"pf_tot\", \"power_factor\", \"power_factor_total\");\n\nlet s_kva = pick(\"s_kva\", \"s_tot\", \"apparent_power\", \"apparent_power_total\");\nlet p_kw = pick(\"p_kw\", \"p_tot\", \"active_power\", \"active_power_total\");\nlet q_kvar = pick(\"q_kvar\", \"q_tot\", \"reactive_power\", \"reactive_power_total\");\n\nif (s_kva === null && v_l1 !== null && v_l2 !== null && v_l3 !== null && i_l1 !== null && i_l2 !== null && i_l3 !== null) {\n    s_kva = ((v_l1 * i_l1) + (v_l2 * i_l2) + (v_l3 * i_l3)) / 1000.0;\n}\n\nif (p_kw === null && s_kva !== null && pf !== null) {\n    p_kw = s_kva * pf;\n}\n\nif (q_kvar === null && s_kva !== null && p_kw !== null) {\n    q_kvar = Math.sqrt(Math.max((s_kva * s_kva) - (p_kw * p_kw), 0));\n}\n\nmsg.topic = \"uns/json/energy/PackLine1\";\n\nmsg.payload = JSON.stringify({\n    v_l1: v_l1,\n    v_l2: v_l2,\n    v_l3: v_l3,\n\n    i_l1: i_l1,\n    i_l2: i_l2,\n    i_l3: i_l3,\n\n    p_kw: p_kw,\n    q_kvar: q_kvar,\n    s_kva: s_kva,\n    pf: pf,\n\n    freq_hz: pick(\"freq_hz\", \"freq\", \"frequency\"),\n\n    thd_v_pct: pick(\"thd_v_pct\", \"thd_v\"),\n    thd_i_pct: pick(\"thd_i_pct\", \"thd_i\"),\n\n    p_l1_kw: pick(\"p_l1_kw\", \"p_l1\"),\n    p_l2_kw: pick(\"p_l2_kw\", \"p_l2\"),\n    p_l3_kw: pick(\"p_l3_kw\", \"p_l3\"),\n\n    pf_l1: pick(\"pf_l1\"),\n    pf_l2: pick(\"pf_l2\"),\n    pf_l3: pick(\"pf_l3\"),\n\n    kwh: pick(\"kwh\"),\n    kvarh: pick(\"kvarh\"),\n    demand_kw: pick(\"demand_kw\", \"demand\")\n});\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 440,
+        "wires": [
+            [
+                "30acd56e80dde1d8"
+            ]
+        ]
+    },
+    {
+        "id": "f551fb300dcb9349",
+        "type": "function",
+        "z": "012182c20eae238b",
+        "name": "JSON Utilities",
+        "func": "let p = msg.payload;\n\nfunction pick(...keys) {\n    for (let k of keys) {\n        if (p[k] !== undefined && p[k] !== null) return Number(p[k]);\n    }\n    return null;\n}\n\nlet v_l1 = pick(\"v_l1\");\nlet v_l2 = pick(\"v_l2\");\nlet v_l3 = pick(\"v_l3\");\n\nlet i_l1 = pick(\"i_l1\");\nlet i_l2 = pick(\"i_l2\");\nlet i_l3 = pick(\"i_l3\");\n\nlet pf = pick(\"pf\", \"pf_tot\", \"power_factor\", \"power_factor_total\");\n\nlet s_kva = pick(\"s_kva\", \"s_tot\", \"apparent_power\", \"apparent_power_total\");\nlet p_kw = pick(\"p_kw\", \"p_tot\", \"active_power\", \"active_power_total\");\nlet q_kvar = pick(\"q_kvar\", \"q_tot\", \"reactive_power\", \"reactive_power_total\");\n\nif (s_kva === null && v_l1 !== null && v_l2 !== null && v_l3 !== null && i_l1 !== null && i_l2 !== null && i_l3 !== null) {\n    s_kva = ((v_l1 * i_l1) + (v_l2 * i_l2) + (v_l3 * i_l3)) / 1000.0;\n}\n\nif (p_kw === null && s_kva !== null && pf !== null) {\n    p_kw = s_kva * pf;\n}\n\nif (q_kvar === null && s_kva !== null && p_kw !== null) {\n    q_kvar = Math.sqrt(Math.max((s_kva * s_kva) - (p_kw * p_kw), 0));\n}\n\nmsg.topic = \"uns/json/energy/Utilities\";\n\nmsg.payload = JSON.stringify({\n    v_l1: v_l1,\n    v_l2: v_l2,\n    v_l3: v_l3,\n\n    i_l1: i_l1,\n    i_l2: i_l2,\n    i_l3: i_l3,\n\n    p_kw: p_kw,\n    q_kvar: q_kvar,\n    s_kva: s_kva,\n    pf: pf,\n\n    freq_hz: pick(\"freq_hz\", \"freq\", \"frequency\"),\n\n    thd_v_pct: pick(\"thd_v_pct\", \"thd_v\"),\n    thd_i_pct: pick(\"thd_i_pct\", \"thd_i\"),\n\n    p_l1_kw: pick(\"p_l1_kw\", \"p_l1\"),\n    p_l2_kw: pick(\"p_l2_kw\", \"p_l2\"),\n    p_l3_kw: pick(\"p_l3_kw\", \"p_l3\"),\n\n    pf_l1: pick(\"pf_l1\"),\n    pf_l2: pick(\"pf_l2\"),\n    pf_l3: pick(\"pf_l3\"),\n\n    kwh: pick(\"kwh\"),\n    kvarh: pick(\"kvarh\"),\n    demand_kw: pick(\"demand_kw\", \"demand\")\n});\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 600,
+        "wires": [
+            [
+                "c43b314c7893a346"
+            ]
+        ]
+    },
+    {
+        "id": "e6fb568c056a7a14",
+        "type": "modbus-client",
+        "name": "",
+        "clienttype": "tcp",
+        "bufferCommands": true,
+        "stateLogEnabled": false,
+        "queueLogEnabled": false,
+        "failureLogEnabled": true,
+        "tcpHost": "127.0.0.1",
+        "tcpPort": "5020",
+        "tcpType": "DEFAULT",
+        "serialPort": "/dev/ttyUSB",
+        "serialType": "RTU-BUFFERD",
+        "serialBaudrate": 9600,
+        "serialDatabits": 8,
+        "serialStopbits": 1,
+        "serialParity": "none",
+        "serialConnectionDelay": 100,
+        "serialAsciiResponseStartDelimiter": "0x3A",
+        "unit_id": "",
+        "commandDelay": 1,
+        "clientTimeout": 1000,
+        "reconnectOnTimeout": true,
+        "reconnectTimeout": 2000,
+        "parallelUnitIdsAllowed": true,
+        "showErrors": false,
+        "showWarnings": true,
+        "showLogs": true
+    },
+    {
+        "id": "680686000d28b77c",
+        "type": "mqtt-sparkplug-broker",
+        "name": "HiveMQ-Sparkplug",
+        "deviceGroup": "UNS-Packaging",
+        "eonName": "RPi4-Edge",
+        "broker": "e172211a559b42289548a3dbeb0158ee.s1.eu.hivemq.cloud",
+        "port": "8883",
+        "tls": "2ffea0cc76428c78",
+        "clientid": "",
+        "usetls": true,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "enableStoreForward": false,
+        "compressAlgorithm": "",
+        "aliasMetrics": false,
+        "useTemplates": true,
+        "templates": [],
+        "manualEoNBirth": false,
+        "primaryScada": ""
+    },
+    {
+        "id": "af4f59b3596b98ce",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "e172211a559b42289548a3dbeb0158ee.s1.eu.hivemq.cloud",
+        "port": "8883",
+        "tls": "2ffea0cc76428c78",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "2ffea0cc76428c78",
+        "type": "tls-config",
+        "name": "hivemq-tls",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "",
+        "verifyservercert": true,
+        "alpnprotocol": ""
+    },
+    {
+        "id": "3aa28dfca0f0f34d",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-contrib-modbus": "5.45.2",
+            "node-red-contrib-mqtt-sparkplug-plus": "2.2.3"
+        }
+    }
+]
